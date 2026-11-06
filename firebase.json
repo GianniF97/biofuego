@@ -12,7 +12,12 @@
       "extracted_assets/**",
       "scratch/**",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "assets/images/aserrin_macro.jpg",
+      "assets/images/fuego_parrilla.jpg",
+      "assets/images/misiones_paisaje.jpg",
+      "assets/images/pack-5-pastillas.png",
+      "assets/images/puck-hero-800.png"
     ],
     "cleanUrls": true,
     "trailingSlash": false,

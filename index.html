@@ -30,11 +30,19 @@
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
   <link rel="apple-touch-icon" href="assets/images/favicon.svg">
   
-  <!-- Optimización de Carga Crítica (Preload LCP Image & Fonts) -->
-  <link rel="preload" as="image" href="assets/images/puck-hero-800.avif" type="image/avif" fetchpriority="high">
+  <!-- Optimización de Carga Crítica (Preload LCP Image & Logo) -->
+  <link rel="preload" as="image" href="assets/images/biofuego-logo.png" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/puck-hero-800.avif" type="image/avif" media="(min-width: 600px)" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/puck-hero-400.avif" type="image/avif" media="(max-width: 599px)" fetchpriority="high">
+  
+  <!-- Tipografías Google Fonts (Carga Asíncrona No Bloqueante) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+  </noscript>
   
   <!-- Hojas de Estilos -->
   <link rel="stylesheet" href="assets/css/style.css">
@@ -47,8 +55,8 @@
     "@type": "Product",
     "name": "Biofuego Iniciadores de Fuego Artesanales",
     "image": [
-      "https://biofuego.web.app/assets/images/puck-hero.png",
-      "https://biofuego.web.app/assets/images/pack-5-pastillas.png"
+      "https://biofuego.web.app/assets/images/puck-hero-800.webp",
+      "https://biofuego.web.app/assets/images/pack-5-pastillas.webp"
     ],
     "description": "Iniciadores de fuego artesanales de encendido fácil elaborados a base de aserrín 100% de madera ecológica en Misiones, Argentina. Pack de 5 pastillas con mechas.",
     "brand": {
@@ -137,22 +145,22 @@
 
       <div class="container hero-grid">
         <div class="hero-content">
-          <div class="hero-badge-pill reveal-item">
+          <div class="hero-badge-pill">
             <svg class="hero-badge-flame" viewBox="0 0 41 45" aria-hidden="true">
               <path d="M 5.939 14.790 C 0 17.672 0 44.108 22.573 44.300 C 30.206 44.365 38.903 39.563 39.794 31.920 C 40.685 24.277 36.959 20.434 36.959 20.434 C 36.959 20.434 34.751 26.374 31.335 26.820 C 31.335 26.820 34.239 19.079 27.853 12.396 C 21.466 5.713 23.238 0 23.238 0 C 23.238 0 9.123 7.691 12.771 21.919 C 12.771 21.919 8.464 20.073 5.939 14.790 Z" fill="#F15625"/>
             </svg>
             <span class="hero-badge-text">› Iniciadores de fuego artesanales ‹</span>
           </div>
 
-          <h1 class="display-title display-title-hero reveal-item delay-1">
+          <h1 class="display-title display-title-hero">
             El origen de un <em>buen fuego</em>.
           </h1>
 
-          <p class="hero-subtitle reveal-item delay-2">
+          <p class="hero-subtitle">
             Iniciadores de fuego artesanales. De Misiones, Argentina, para el mundo.
           </p>
 
-          <div class="hero-cta-group reveal-item delay-3">
+          <div class="hero-cta-group">
             <a href="https://wa.me/5493755665852?text=¡Hola%20Biofuego!%20Quiero%20hacer%20un%20pedido%20de%20iniciadores%20artesanales." target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg magnetic-btn">
               <span>Hacenos tu pedido</span>
               <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -166,7 +174,7 @@
         </div>
 
         <!-- ESCENARIO PROTAGONISTA DE LA PASTILLA DE ASERRÍN -->
-        <div class="hero-stage reveal-scale delay-2">
+        <div class="hero-stage">
           <!-- Chips Informativos en Escritorio -->
           <div class="floating-chip chip-left">
             <div class="chip-icon">
@@ -206,7 +214,7 @@
               <source srcset="assets/images/puck-hero-400.avif" media="(max-width: 599px)" type="image/avif">
               <source srcset="assets/images/puck-hero-800.webp" media="(min-width: 600px)" type="image/webp">
               <source srcset="assets/images/puck-hero-400.webp" media="(max-width: 599px)" type="image/webp">
-              <img src="assets/images/puck-hero-800.png" alt="Pastilla artesanal de aserrín de madera ecológica Biofuego con mecha integrada" class="hero-puck-img" width="540" height="417" fetchpriority="high" decoding="async">
+              <img src="assets/images/puck-hero-800.webp" alt="Pastilla artesanal de aserrín de madera ecológica Biofuego con mecha integrada" class="hero-puck-img" width="540" height="417" fetchpriority="high" decoding="async">
             </picture>
           </div>
 
@@ -214,7 +222,7 @@
           <div class="hero-chips-container" style="display: none;"></div>
         </div>
 
-        <div class="hero-scroll-indicator reveal-item delay-4">
+        <div class="hero-scroll-indicator">
           <div class="scroll-mouse" aria-hidden="true">
             <div class="scroll-wheel"></div>
           </div>
@@ -275,14 +283,14 @@
               <picture>
                 <source srcset="assets/images/aserrin_macro.avif" type="image/avif">
                 <source srcset="assets/images/aserrin_macro.webp" type="image/webp">
-                <img src="assets/images/aserrin_macro.jpg" alt="Virutas y aserrín de madera misionera en taller artesanal" class="composition-main-img" width="600" height="500" loading="lazy" decoding="async">
+                <img src="assets/images/aserrin_macro.webp" alt="Virutas y aserrín de madera misionera en taller artesanal" class="composition-main-img" width="600" height="500" loading="lazy" decoding="async">
               </picture>
 
               <div class="floating-detail-card">
                 <picture>
                   <source srcset="assets/images/puck-texture-real.avif" type="image/avif">
                   <source srcset="assets/images/puck-texture-real.webp" type="image/webp">
-                  <img src="assets/images/puck-texture-real.jpg" alt="Macro de textura de pastilla de aserrín Biofuego" class="detail-thumb" width="72" height="72" loading="lazy" decoding="async">
+                  <img src="assets/images/puck-texture-real.webp" alt="Macro de textura de pastilla de aserrín Biofuego" class="detail-thumb" width="72" height="72" loading="lazy" decoding="async">
                 </picture>
                 <div>
                   <div class="detail-info-title">Textura Compactada</div>
@@ -346,7 +354,7 @@
                   <source srcset="assets/images/pack-5-pastillas.avif" type="image/avif">
                   <source srcset="assets/images/pack-5-pastillas-1000.webp" media="(min-width: 600px)" type="image/webp">
                   <source srcset="assets/images/pack-5-pastillas-600.webp" type="image/webp">
-                  <img src="assets/images/pack-5-pastillas.png" alt="Composición de 5 pastillas con mechas Biofuego elaboradas a base de aserrín" class="product-pack-img" width="440" height="272" loading="lazy" decoding="async">
+                  <img src="assets/images/pack-5-pastillas.webp" alt="Composición de 5 pastillas con mechas Biofuego elaboradas a base de aserrín" class="product-pack-img" width="440" height="272" loading="lazy" decoding="async">
                 </picture>
               </div>
               <div class="pack-caption-tag">
@@ -411,7 +419,7 @@
               <picture>
                 <source srcset="assets/images/puck-wick-detail.avif" type="image/avif">
                 <source srcset="assets/images/puck-wick-detail.webp" type="image/webp">
-                <img src="assets/images/puck-wick-detail.jpg" alt="Detalle de la mecha integrada en la pastilla de aserrín Biofuego" class="gallery-img" width="400" height="225" loading="lazy" decoding="async">
+                <img src="assets/images/puck-wick-detail.webp" alt="Detalle de la mecha integrada en la pastilla de aserrín Biofuego" class="gallery-img" width="400" height="225" loading="lazy" decoding="async">
               </picture>
             </div>
             <div class="gallery-info">
@@ -425,7 +433,7 @@
               <picture>
                 <source srcset="assets/images/puck-texture-real.avif" type="image/avif">
                 <source srcset="assets/images/puck-texture-real.webp" type="image/webp">
-                <img src="assets/images/puck-texture-real.jpg" alt="Textura de aserrín de madera ecológica de la pastilla Biofuego" class="gallery-img" width="400" height="225" loading="lazy" decoding="async">
+                <img src="assets/images/puck-texture-real.webp" alt="Textura de aserrín de madera ecológica de la pastilla Biofuego" class="gallery-img" width="400" height="225" loading="lazy" decoding="async">
               </picture>
             </div>
             <div class="gallery-info">
@@ -439,7 +447,7 @@
               <picture>
                 <source srcset="assets/images/fuego_parrilla.avif" type="image/avif">
                 <source srcset="assets/images/fuego_parrilla_800.webp" type="image/webp">
-                <img src="assets/images/fuego_parrilla.jpg" alt="Fuego vivo con brasas al rojo vivo" class="gallery-img" width="400" height="225" loading="lazy" decoding="async">
+                <img src="assets/images/fuego_parrilla.webp" alt="Fuego vivo con brasas al rojo vivo" class="gallery-img" width="400" height="225" loading="lazy" decoding="async">
               </picture>
             </div>
             <div class="gallery-info">
@@ -497,7 +505,7 @@
               <picture>
                 <source srcset="assets/images/misiones_paisaje.avif" type="image/avif">
                 <source srcset="assets/images/misiones_paisaje.webp" type="image/webp">
-                <img src="assets/images/misiones_paisaje.jpg" alt="Tierra colorada y bosques sustentables de Misiones, Argentina" width="580" height="326" loading="lazy" decoding="async">
+                <img src="assets/images/misiones_paisaje.webp" alt="Tierra colorada y bosques sustentables de Misiones, Argentina" width="580" height="326" loading="lazy" decoding="async">
               </picture>
               <div class="origen-card-overlay">
                 <div class="overlay-title">Tierra Colorada & Montes Misioneros</div>
@@ -510,7 +518,7 @@
                 <picture>
                   <source srcset="assets/images/aserrin_macro.avif" type="image/avif">
                   <source srcset="assets/images/aserrin_macro_800.webp" type="image/webp">
-                  <img src="assets/images/aserrin_macro.jpg" alt="Aserrín en taller maderero" width="280" height="175" loading="lazy" decoding="async">
+                  <img src="assets/images/aserrin_macro.webp" alt="Aserrín en taller maderero" width="280" height="175" loading="lazy" decoding="async">
                 </picture>
                 <div class="small-card-label">Oficio & Aserrín Puro</div>
               </div>
@@ -519,7 +527,7 @@
                 <picture>
                   <source srcset="assets/images/fuego_parrilla.avif" type="image/avif">
                   <source srcset="assets/images/fuego_parrilla_800.webp" type="image/webp">
-                  <img src="assets/images/fuego_parrilla.jpg" alt="Fuego vivo para asados" width="280" height="175" loading="lazy" decoding="async">
+                  <img src="assets/images/fuego_parrilla.webp" alt="Fuego vivo para asados" width="280" height="175" loading="lazy" decoding="async">
                 </picture>
                 <div class="small-card-label">El Rito del Buen Fuego</div>
               </div>

@@ -599,7 +599,7 @@ ul, ol {
   contain: layout;
   user-select: none;
   -webkit-user-drag: none;
-  animation: heroFloat 6s ease-in-out infinite;
+  animation: heroFloat 6s ease-in-out infinite 0.5s;
 }
 
 /* Chips Flotantes Informativos (Sin backdrop-filter para 60fps) */
@@ -651,19 +651,19 @@ ul, ol {
 .chip-left {
   top: 18%;
   left: 2%;
-  animation: chipFloatLeft 5s ease-in-out infinite;
+  animation: chipFloatLeft 5s ease-in-out infinite 0.7s;
 }
 
 .chip-right {
   top: 32%;
   right: 2%;
-  animation: chipFloatRight 5.5s ease-in-out infinite 0.5s;
+  animation: chipFloatRight 5.5s ease-in-out infinite 0.9s;
 }
 
 .chip-bottom {
   bottom: 5%;
   left: 10%;
-  animation: chipFloatBottom 6s ease-in-out infinite 1s;
+  animation: chipFloatBottom 6s ease-in-out infinite 1.1s;
 }
 
 .hero-scroll-indicator {
