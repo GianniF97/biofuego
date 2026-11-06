@@ -200,7 +200,7 @@ ul, ol {
 
 .display-title-hero {
   font-size: clamp(2.35rem, 5.5vw + 1rem, 5.75rem);
-  line-height: 1.02;
+  line-height: 1.08;
   letter-spacing: -0.04em;
 }
 
