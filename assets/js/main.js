@@ -93,74 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --------------------------------------------------------------------------
-  // 3. Inclinación 3D Interactiva del Hero Puck (Bajo Demanda - Solo en Hover)
+  // 3. Hero Puck & Chips (Animación 100% GPU en Compositor Thread - Zero Main Thread Lag)
   // --------------------------------------------------------------------------
-  const heroStage = document.querySelector('.hero-stage');
-  const puckWrapper = document.querySelector('.hero-puck-wrapper');
-  const puckImg = document.querySelector('.hero-puck-img');
-
-  if (heroStage && puckWrapper && !isReducedMotion && !isTouchDevice && window.innerWidth >= 992) {
-    let currentX = 0;
-    let currentY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let isHovering = false;
-    let isAnimating = false;
-    let cachedRect = null;
-
-    const updateRect = () => {
-      cachedRect = heroStage.getBoundingClientRect();
-    };
-
-    heroStage.addEventListener('mouseenter', () => {
-      isHovering = true;
-      updateRect();
-      if (puckImg) puckImg.style.animationPlayState = 'paused';
-      if (!isAnimating) {
-        isAnimating = true;
-        requestAnimationFrame(tickTilt);
-      }
-    });
-
-    heroStage.addEventListener('mousemove', (e) => {
-      if (!cachedRect) updateRect();
-      const centerX = cachedRect.left + cachedRect.width / 2;
-      const centerY = cachedRect.top + cachedRect.height / 2;
-
-      const normalizedX = (e.clientX - centerX) / (cachedRect.width / 2);
-      const normalizedY = (e.clientY - centerY) / (cachedRect.height / 2);
-
-      targetX = -normalizedY * 10;
-      targetY = normalizedX * 14;
-    }, { passive: true });
-
-    heroStage.addEventListener('mouseleave', () => {
-      isHovering = false;
-      targetX = 0;
-      targetY = 0;
-      if (puckImg) puckImg.style.animationPlayState = 'running';
-    });
-
-    // El bucle RAF se detiene completamente cuando no hay movimiento
-    const tickTilt = () => {
-      currentX += (targetX - currentX) * 0.12;
-      currentY += (targetY - currentY) * 0.12;
-
-      puckWrapper.style.transform = `rotateX(${currentX.toFixed(2)}deg) rotateY(${currentY.toFixed(2)}deg)`;
-
-      const isSettled = !isHovering && Math.abs(currentX) < 0.05 && Math.abs(currentY) < 0.05;
-      if (isSettled) {
-        puckWrapper.style.transform = '';
-        isAnimating = false;
-      } else {
-        requestAnimationFrame(tickTilt);
-      }
-    };
-
-    window.addEventListener('resize', () => {
-      if (isHovering) updateRect();
-    }, { passive: true });
-  }
+  // El escenario del producto flota con aceleración por hardware pura en CSS (translate3d),
+  // liberando completamente el hilo principal y garantizando 60-120 FPS sin tirones por mouse.
 
   // --------------------------------------------------------------------------
   // 4. Revelación Progresiva al Scroll (Intersection Observer Instantáneo)

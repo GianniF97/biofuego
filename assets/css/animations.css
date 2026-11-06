@@ -7,41 +7,20 @@
    Keyframes
    -------------------------------------------------------------------------- */
 @keyframes heroFloat {
-  0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate3d(0, -10px, 0) rotate(-0.8deg);
-  }
-  100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
-  }
-}
-
-@keyframes chipFloatLeft {
   0%, 100% {
     transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translate3d(0, -6px, 0);
+    transform: translate3d(0, -9px, 0);
   }
 }
 
-@keyframes chipFloatRight {
+@keyframes chipFloat {
   0%, 100% {
     transform: translate3d(0, 0, 0);
   }
   50% {
     transform: translate3d(0, -7px, 0);
-  }
-}
-
-@keyframes chipFloatBottom {
-  0%, 100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -5px, 0);
   }
 }
 
