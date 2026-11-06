@@ -240,19 +240,16 @@ ul, ol {
   height: var(--nav-height);
   display: flex;
   align-items: center;
-  transition: background-color var(--transition-smooth),
-              backdrop-filter var(--transition-smooth),
-              border-color var(--transition-smooth),
-              box-shadow var(--transition-smooth);
+  transition: background-color var(--transition-fast),
+              border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
   padding: 0 4px;
 }
 
 .site-header.scrolled {
-  background-color: rgba(250, 248, 245, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background-color: rgba(250, 248, 245, 0.96);
   border-bottom: 1px solid rgba(35, 31, 32, 0.08);
-  box-shadow: 0 4px 20px rgba(35, 31, 32, 0.03);
+  box-shadow: 0 4px 16px rgba(35, 31, 32, 0.03);
 }
 
 .nav-wrapper {
@@ -374,13 +371,11 @@ ul, ol {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(20, 18, 18, 0.45);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(20, 18, 18, 0.6);
   z-index: 999;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--transition-smooth);
+  transition: opacity var(--transition-fast);
 }
 
 .nav-backdrop.open {
@@ -578,7 +573,6 @@ ul, ol {
   justify-content: center;
   align-items: center;
   transform-style: preserve-3d;
-  will-change: transform;
 }
 
 .hero-puck-ambient-glow {
@@ -588,9 +582,8 @@ ul, ol {
   width: 80%;
   height: 80%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(241, 86, 37, 0.2) 0%, rgba(241, 86, 37, 0.04) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(241, 86, 37, 0.18) 0%, rgba(241, 86, 37, 0.07) 35%, rgba(241, 86, 37, 0.01) 60%, transparent 75%);
   border-radius: 50%;
-  filter: blur(40px);
   z-index: 1;
   pointer-events: none;
 }
@@ -602,24 +595,22 @@ ul, ol {
   max-width: 540px;
   height: auto;
   aspect-ratio: 1836 / 1418;
-  filter: drop-shadow(0 20px 35px rgba(35, 31, 32, 0.16))
-          drop-shadow(0 35px 70px rgba(35, 31, 32, 0.1));
+  filter: drop-shadow(0 14px 22px rgba(35, 31, 32, 0.15));
+  contain: layout;
   user-select: none;
   -webkit-user-drag: none;
   animation: heroFloat 6s ease-in-out infinite;
 }
 
-/* Chips Flotantes Informativos */
+/* Chips Flotantes Informativos (Sin backdrop-filter para 60fps) */
 .floating-chip {
   position: absolute;
   z-index: 4;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.98);
   padding: 8px 16px;
   border-radius: var(--radius-full);
   border: 1px solid rgba(35, 31, 32, 0.08);
-  box-shadow: 0 8px 24px rgba(35, 31, 32, 0.08);
+  box-shadow: 0 4px 16px rgba(35, 31, 32, 0.08);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1264,9 +1255,7 @@ ul, ol {
   left: 10px;
   right: 10px;
   padding: 6px 10px;
-  background: rgba(20, 18, 18, 0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(20, 18, 18, 0.9);
   border-radius: var(--radius-sm);
   font-family: var(--font-display);
   font-size: 0.75rem;
