@@ -1,0 +1,24 @@
+{
+  "name": "biofuego-landing",
+  "version": "1.0.0",
+  "description": "Sitio web oficial de BIOFUEGO — Iniciadores de fuego artesanales a base de aserrín de madera ecológica de Misiones, Argentina.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "dev": "npx serve -l 3000 .",
+    "emulate": "npx firebase-tools emulators:start --only hosting",
+    "deploy": "npx firebase-tools deploy --only hosting:biofuego",
+    "deploy:preview": "npx firebase-tools hosting:channel:deploy preview"
+  },
+  "keywords": [
+    "biofuego",
+    "iniciadores-de-fuego",
+    "aserrin-ecologico",
+    "misiones-argentina",
+    "artesanal",
+    "parrilla",
+    "maderera-ferrari"
+  ],
+  "author": "Biofuego — Maderera Ferrari",
+  "license": "ISC"
+}
