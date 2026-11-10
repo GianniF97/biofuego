@@ -1,0 +1,18 @@
+newmtl PuckMaterial
+Ka 1.000 1.000 1.000
+Kd 1.000 1.000 1.000
+Ks 0.150 0.150 0.150
+Ns 30.0
+d 1.0
+illum 2
+map_Kd ../textures/puck_albedo.jpg
+bump ../textures/puck_normal.jpg
+
+newmtl WickMaterial
+Ka 1.000 1.000 1.000
+Kd 0.950 0.920 0.880
+Ks 0.050 0.050 0.050
+Ns 10.0
+d 1.0
+illum 2
+map_Kd ../textures/wick_albedo.jpg
