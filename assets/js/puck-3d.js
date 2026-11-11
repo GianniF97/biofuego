@@ -88,30 +88,30 @@
     }
     if (renderer.toneMapping !== undefined) {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.05;
+      renderer.toneMappingExposure = 0.98;
     }
 
-    // 3. Iluminación Cálida y Equilibrada de Estudio (Tonos Madera, Resina & Fuego)
-    const ambientLight = new THREE.AmbientLight(0xffeedd, 0.52);
+    // 3. Iluminación de Estudio Fotográfico Profesional (Softboxes Neutros y Luz de Ambiente Suave)
+    const ambientLight = new THREE.AmbientLight(0xfdfbf7, 0.60);
     scene.add(ambientLight);
 
-    // Luz principal (Key Light) desde arriba a la derecha
-    const keyLight = new THREE.DirectionalLight(0xfffaf0, 1.10);
-    keyLight.position.set(3.2, 4.0, 3.5);
+    // Luz principal (Key Softbox) desde arriba a la derecha - luz blanca pura equilibrada
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.88);
+    keyLight.position.set(3.2, 4.2, 3.5);
     scene.add(keyLight);
 
-    // Luz de relleno lateral (Madera cálida)
-    const fillLight = new THREE.DirectionalLight(0xffcfa0, 0.42);
-    fillLight.position.set(-3.2, 1.5, 2.2);
+    // Luz de relleno (Fill Softbox) suave y neutra para preservar microdetalles en sombras
+    const fillLight = new THREE.DirectionalLight(0xf2e8dd, 0.40);
+    fillLight.position.set(-3.2, 1.8, 2.2);
     scene.add(fillLight);
 
-    // Luz de contorno Biofuego (Naranja fuego en el borde)
-    const rimLight = new THREE.DirectionalLight(0xf15625, 1.35);
-    rimLight.position.set(-2.6, 2.6, -3.2);
+    // Luz de contorno neutra (Rim Light suave para volumen tridimensional sin saturación)
+    const rimLight = new THREE.DirectionalLight(0xfff6ea, 0.30);
+    rimLight.position.set(-2.6, 2.8, -3.2);
     scene.add(rimLight);
 
-    // Reflejo cálido desde abajo
-    const groundBounce = new THREE.DirectionalLight(0xff8833, 0.30);
+    // Reflejo suave desde el plano inferior (Tonos madera clara / beige)
+    const groundBounce = new THREE.DirectionalLight(0xeee2d5, 0.16);
     groundBounce.position.set(0, -2.5, 1.5);
     scene.add(groundBounce);
 
@@ -122,43 +122,47 @@
     // 5. Carga de Texturas PBR con Mapeos Separados para Caras y Lateral
     const textureLoader = new THREE.TextureLoader();
 
-    // Textura para la cara superior e inferior (1:1 cenital)
+    // Textura para la cara superior e inferior (Mapeo cenital 1:1 perfecto sin costuras)
     const albedoTop = textureLoader.load('assets/textures/puck_albedo.webp');
     albedoTop.encoding = THREE.sRGBEncoding;
+
     const normalTop = textureLoader.load('assets/textures/puck_normal.webp');
     const roughnessTop = textureLoader.load('assets/textures/puck_roughness.webp');
 
-    // Textura para la pared lateral (4 repeticiones continuas alrededor del cilindro)
+    // Textura para la pared lateral (Escala idéntica a la cara superior y relación 1:1 sin estiramiento)
+    // Circunferencia / Diámetro = Pi (~3.1416) y Altura / Diámetro = 0.86 / 2.92 = 0.295
     const albedoSide = textureLoader.load('assets/textures/puck_albedo.webp');
     albedoSide.encoding = THREE.sRGBEncoding;
     albedoSide.wrapS = THREE.RepeatWrapping;
     albedoSide.wrapT = THREE.RepeatWrapping;
-    albedoSide.repeat.set(4.0, 1.0);
+    albedoSide.repeat.set(Math.PI, 0.295);
 
     const normalSide = textureLoader.load('assets/textures/puck_normal.webp');
     normalSide.wrapS = THREE.RepeatWrapping;
     normalSide.wrapT = THREE.RepeatWrapping;
-    normalSide.repeat.set(4.0, 1.0);
+    normalSide.repeat.set(Math.PI, 0.295);
 
     const roughnessSide = textureLoader.load('assets/textures/puck_roughness.webp');
     roughnessSide.wrapS = THREE.RepeatWrapping;
     roughnessSide.wrapT = THREE.RepeatWrapping;
-    roughnessSide.repeat.set(4.0, 1.0);
+    roughnessSide.repeat.set(Math.PI, 0.295);
 
-    // Textura para la mecha
+    // Texturas para la mecha de algodón
     const wickAlbedo = textureLoader.load('assets/textures/wick_albedo.webp');
     wickAlbedo.encoding = THREE.sRGBEncoding;
     const wickNormal = textureLoader.load('assets/textures/wick_normal.webp');
+    const wickRoughness = textureLoader.load('assets/textures/wick_roughness.webp');
 
-    // 6. Geometría de Cilindro Biselado (Pastilla de Aserrín Prensado)
+    // 6. Geometría de Cilindro Biselado Artesanal (Pastilla de Aserrín Prensado)
     const R = 1.46;
     const H = 0.86;
     const segRadial = 64;
     const segHeight = 16;
 
-    const puckGeo = new THREE.CylinderGeometry(R, R * 0.98, H, segRadial, segHeight);
+    // Conicidad suave tipo molde artesanal (base ligeramente menor que la corona superior)
+    const puckGeo = new THREE.CylinderGeometry(R, R * 0.92, H, segRadial, segHeight);
 
-    // Redondear suavemente las aristas superior e inferior (Bisel artesanal continuo)
+    // Redondear artesanalmente aristas, relieve orgánico y depresión central
     const pos = puckGeo.attributes.position;
     const norm = puckGeo.attributes.normal;
 
@@ -187,9 +191,15 @@
         pos.setXYZ(i, newX, newY, newZ);
       }
 
+      // Suave depresión artesanal hacia el centro donde se asienta la mecha
+      if (y > H / 2 - 0.08 && r < R - 0.25) {
+        const centerDip = Math.max(0, 1.0 - (r / (R - 0.25))) * 0.045;
+        pos.setY(i, pos.getY(i) - centerDip);
+      }
+
       // Micro-rugosidad artesanal de virutas prensadas
-      const n1 = Math.sin(angle * 14.0) * Math.cos(y * 12.0) * 0.008;
-      const n2 = Math.cos(angle * 22.0 + y * 9.0) * 0.005;
+      const n1 = Math.sin(angle * 14.0) * Math.cos(y * 12.0) * 0.007;
+      const n2 = Math.cos(angle * 22.0 + y * 9.0) * 0.004;
       const disp = n1 + n2;
 
       pos.setX(i, pos.getX(i) + norm.getX(i) * disp);
@@ -199,29 +209,23 @@
 
     puckGeo.computeVertexNormals();
 
-    // Materiales PBR con fino barniz de cera ecológica
-    const sideMaterial = new THREE.MeshPhysicalMaterial({
+    // Materiales PBR - Aserrín de madera comprimido artesanal (superficie mate, orgánica y fibrosa)
+    const sideMaterial = new THREE.MeshStandardMaterial({
       map: albedoSide,
       normalMap: normalSide,
-      normalScale: new THREE.Vector2(1.7, 1.7),
+      normalScale: new THREE.Vector2(1.1, 1.1),
       roughnessMap: roughnessSide,
-      roughness: 0.65,
-      metalness: 0.0,
-      clearcoat: 0.28,
-      clearcoatRoughness: 0.35,
-      reflectivity: 0.42
+      roughness: 0.90,
+      metalness: 0.0
     });
 
-    const topMaterial = new THREE.MeshPhysicalMaterial({
+    const topMaterial = new THREE.MeshStandardMaterial({
       map: albedoTop,
       normalMap: normalTop,
-      normalScale: new THREE.Vector2(1.7, 1.7),
+      normalScale: new THREE.Vector2(1.1, 1.1),
       roughnessMap: roughnessTop,
-      roughness: 0.65,
-      metalness: 0.0,
-      clearcoat: 0.28,
-      clearcoatRoughness: 0.35,
-      reflectivity: 0.42
+      roughness: 0.90,
+      metalness: 0.0
     });
 
     const bottomMaterial = topMaterial.clone();
@@ -232,20 +236,35 @@
     puckGroup.add(puckMesh);
 
     // 7. Mecha de Algodón Trenzado con Curvatura Natural y Punta Tostada
+    const wickSegments = 28;
+    const wickRadialSegments = 14;
     const wickPoints = [
-      new THREE.Vector3(0.02, H / 2 - 0.03, 0.03),
-      new THREE.Vector3(0.06, H / 2 + 0.22, 0.07),
-      new THREE.Vector3(0.14, H / 2 + 0.46, 0.11),
-      new THREE.Vector3(0.22, H / 2 + 0.70, 0.08)
+      new THREE.Vector3(0.02, H / 2 - 0.16, 0.03),
+      new THREE.Vector3(0.05, H / 2 + 0.15, 0.06),
+      new THREE.Vector3(0.12, H / 2 + 0.40, 0.10),
+      new THREE.Vector3(0.20, H / 2 + 0.65, 0.07)
     ];
     const wickCurve = new THREE.CatmullRomCurve3(wickPoints);
-    const wickGeo = new THREE.TubeGeometry(wickCurve, 28, 0.080, 14, false);
+    const wickGeo = new THREE.TubeGeometry(wickCurve, wickSegments, 0.085, wickRadialSegments, false);
+
+    // Cerrar y redondear la punta de la mecha para que no sea un tubo hueco
+    const wickPos = wickGeo.attributes.position;
+    const lastRingStart = wickSegments * (wickRadialSegments + 1);
+    const tipEnd = wickPoints[wickPoints.length - 1].clone().add(new THREE.Vector3(0.03, 0.05, -0.01));
+    for (let j = 0; j <= wickRadialSegments; j++) {
+      const idx = lastRingStart + j;
+      if (idx < wickPos.count) {
+        wickPos.setXYZ(idx, tipEnd.x, tipEnd.y, tipEnd.z);
+      }
+    }
+    wickGeo.computeVertexNormals();
 
     const wickMaterial = new THREE.MeshStandardMaterial({
       map: wickAlbedo,
       normalMap: wickNormal,
-      normalScale: new THREE.Vector2(1.3, 1.3),
-      roughness: 0.82,
+      normalScale: new THREE.Vector2(1.0, 1.0),
+      roughnessMap: wickRoughness,
+      roughness: 0.92,
       metalness: 0.0
     });
 
