@@ -69,7 +69,7 @@ html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
   background-color: var(--brand-canvas);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -78,7 +78,7 @@ body {
   background-color: var(--brand-canvas);
   line-height: 1.6;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
   max-width: 100vw;
   -webkit-font-smoothing: antialiased;
@@ -627,6 +627,7 @@ ul, ol {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--color-charcoal);
+  white-space: nowrap;
   pointer-events: none;
   user-select: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -1759,7 +1760,18 @@ ul, ol {
     display: none;
   }
 
-  /* Hero en Móvil: Chips Reorganizados sin Colisión */
+  /* Hero en Móvil: Pastilla 3D primero y Chips debajo sin Colisión */
+  .hero-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-puck-wrapper {
+    order: -1;
+    margin-bottom: 18px;
+  }
+
   .hero-puck-img {
     max-width: 320px;
   }
@@ -1767,7 +1779,7 @@ ul, ol {
   .floating-chip {
     position: static;
     animation: none !important;
-    margin: 6px auto;
+    margin: 4px auto;
     width: fit-content;
     max-width: 100%;
   }
@@ -2433,7 +2445,7 @@ ul, ol {
     gap: 8px;
   }
 
-  .cookie-btn-config {
+  .cookie-banner-actions .cookie-btn-config {
     grid-column: 1 / -1;
   }
 }
@@ -2719,23 +2731,37 @@ ul, ol {
 }
 
 @media (max-width: 560px) {
-  .cookie-modal-header,
-  .cookie-modal-body,
-  .cookie-modal-footer {
-    padding-left: 18px;
-    padding-right: 18px;
+  .cookie-modal-header {
+    padding: 16px 18px 12px;
+  }
+
+  .cookie-modal-title-wrap h2 {
+    font-size: 1.08rem;
+  }
+
+  .cookie-modal-title-wrap p {
+    font-size: 0.78rem;
+  }
+
+  .cookie-modal-body {
+    padding: 14px 18px;
+    gap: 10px;
   }
 
   .cookie-modal-footer {
+    padding: 12px 18px 16px;
     flex-direction: column;
     align-items: stretch;
+    gap: 8px;
   }
 
   .cookie-modal-footer-left {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
 
+  .cookie-modal-footer #modal-save-preferences,
   .cookie-modal-btn-primary {
     width: 100%;
     text-align: center;
