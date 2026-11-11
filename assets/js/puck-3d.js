@@ -1,12 +1,16 @@
 /**
- * BIOFUEGO — Visor 3D Interactivo de la Pastilla Artesanal de Aserrín
- * Renderizado WebGL PBR con Three.js
- * - Texturas PBR de alta definición de virutas de madera compactadas y cera ecológica
- * - Geometría de cilindro biselado con grupos de materiales separados para máxima nitidez
- * - Mecha artesanal de algodón trenzado con curvatura natural y punta tostada
- * - Control táctil y de ratón 360° con inercia física suave
- * - Órbita automática y respiración cuando está inactivo
- * - Optimización por IntersectionObserver (0% CPU fuera de vista)
+ * BIOFUEGO — Visor 3D Fotorrealista de la Pastilla Artesanal de Aserrín
+ * Basado fielmente en la fotografía real del producto Biofuego
+ * 
+ * Características Fotorrealistas:
+ * - Geometría de molde artesanal tipo muffin/tartaleta (conicidad, estrías verticales y borde irregular)
+ * - Cráter central con menisco de cera vegetal solidificada y cristales translúcidos
+ * - InstancedMesh de virutas y astillas 3D reales que rompen la silueta y aportan relieve físico
+ * - Texturas PBR fotográficas extraídas directamente del producto real (Albedo, Normal, Roughness)
+ * - Mecha gruesa de cordón de algodón impregnada en cera natural con punta orgánica cerrada
+ * - Iluminación de estudio fotográfico suave y sombra de contacto realista
+ * - Interacción 360° táctil y de ratón con inercia física suave
+ * - Optimización por IntersectionObserver (0% CPU fuera de vista, 60 FPS estables)
  */
 
 (function () {
@@ -36,7 +40,7 @@
     const canvas = document.createElement('canvas');
     canvas.id = 'heroPuckCanvas';
     canvas.className = 'hero-puck-canvas';
-    canvas.setAttribute('aria-label', 'Modelo 3D interactivo de la pastilla iniciadora Biofuego');
+    canvas.setAttribute('aria-label', 'Modelo 3D interactivo fotorrealista de la pastilla Biofuego');
     canvas.setAttribute('role', 'img');
 
     // Badge indicador interactivo 3D
@@ -57,12 +61,12 @@
     let width = rect.width || 540;
     let height = rect.height || 440;
 
-    // 1. Escena y Cámara con perspectiva de producto
+    // 1. Escena y Cámara con perspectiva idéntica a la fotografía de producto
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(26, width / height, 0.1, 50);
-    camera.position.set(0, 0.70, 5.8);
-    camera.lookAt(0, -0.06, 0);
+    camera.position.set(0, 0.85, 5.4);
+    camera.lookAt(0, -0.04, 0);
 
     // 2. Renderer WebGL
     let renderer;
@@ -88,49 +92,47 @@
     }
     if (renderer.toneMapping !== undefined) {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 0.98;
+      renderer.toneMappingExposure = 1.0;
     }
 
-    // 3. Iluminación de Estudio Fotográfico Profesional (Softboxes Neutros y Luz de Ambiente Suave)
-    const ambientLight = new THREE.AmbientLight(0xfdfbf7, 0.60);
+    // 3. Iluminación de Estudio Fotográfico Profesional
+    const ambientLight = new THREE.AmbientLight(0xfdfbf7, 0.62);
     scene.add(ambientLight);
 
-    // Luz principal (Key Softbox) desde arriba a la derecha - luz blanca pura equilibrada
-    const keyLight = new THREE.DirectionalLight(0xffffff, 0.88);
-    keyLight.position.set(3.2, 4.2, 3.5);
+    // Luz principal (Key Softbox) desde arriba a la derecha (reproduce las luces del producto real)
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.95);
+    keyLight.position.set(3.4, 4.5, 3.6);
     scene.add(keyLight);
 
-    // Luz de relleno (Fill Softbox) suave y neutra para preservar microdetalles en sombras
-    const fillLight = new THREE.DirectionalLight(0xf2e8dd, 0.40);
-    fillLight.position.set(-3.2, 1.8, 2.2);
+    // Luz de relleno lateral (Fill Softbox) suave y neutra
+    const fillLight = new THREE.DirectionalLight(0xf5ebe0, 0.42);
+    fillLight.position.set(-3.2, 2.0, 2.2);
     scene.add(fillLight);
 
-    // Luz de contorno neutra (Rim Light suave para volumen tridimensional sin saturación)
-    const rimLight = new THREE.DirectionalLight(0xfff6ea, 0.30);
-    rimLight.position.set(-2.6, 2.8, -3.2);
+    // Luz de contorno neutra suave (Rim Light) para definir el volumen tridimensional
+    const rimLight = new THREE.DirectionalLight(0xfff7ec, 0.32);
+    rimLight.position.set(-2.4, 3.0, -3.2);
     scene.add(rimLight);
 
-    // Reflejo suave desde el plano inferior (Tonos madera clara / beige)
-    const groundBounce = new THREE.DirectionalLight(0xeee2d5, 0.16);
+    // Reflejo suave desde el suelo (Tonos madera clara / arena)
+    const groundBounce = new THREE.DirectionalLight(0xeee4d8, 0.18);
     groundBounce.position.set(0, -2.5, 1.5);
     scene.add(groundBounce);
 
-    // 4. Grupo 3D de la Pastilla
+    // 4. Grupo 3D Principal de la Pastilla
     const puckGroup = new THREE.Group();
     scene.add(puckGroup);
 
-    // 5. Carga de Texturas PBR con Mapeos Separados para Caras y Lateral
+    // 5. Carga de Texturas PBR de Aserrín Prensado Real
     const textureLoader = new THREE.TextureLoader();
 
-    // Textura para la cara superior e inferior (Mapeo cenital 1:1 perfecto sin costuras)
+    // Texturas de la cara superior (Mapeo cenital 1:1 sin costuras)
     const albedoTop = textureLoader.load('assets/textures/puck_albedo.webp');
     albedoTop.encoding = THREE.sRGBEncoding;
-
     const normalTop = textureLoader.load('assets/textures/puck_normal.webp');
     const roughnessTop = textureLoader.load('assets/textures/puck_roughness.webp');
 
-    // Textura para la pared lateral (Escala idéntica a la cara superior y relación 1:1 sin estiramiento)
-    // Circunferencia / Diámetro = Pi (~3.1416) y Altura / Diámetro = 0.86 / 2.92 = 0.295
+    // Texturas del lateral estriado compactado (Escala 1:1 idéntica a la cara superior)
     const albedoSide = textureLoader.load('assets/textures/puck_albedo.webp');
     albedoSide.encoding = THREE.sRGBEncoding;
     albedoSide.wrapS = THREE.RepeatWrapping;
@@ -147,69 +149,84 @@
     roughnessSide.wrapT = THREE.RepeatWrapping;
     roughnessSide.repeat.set(Math.PI, 0.295);
 
-    // Texturas para la mecha de algodón
+    // Texturas de la mecha de algodón
     const wickAlbedo = textureLoader.load('assets/textures/wick_albedo.webp');
     wickAlbedo.encoding = THREE.sRGBEncoding;
     const wickNormal = textureLoader.load('assets/textures/wick_normal.webp');
     const wickRoughness = textureLoader.load('assets/textures/wick_roughness.webp');
 
-    // 6. Geometría de Cilindro Biselado Artesanal (Pastilla de Aserrín Prensado)
-    const R = 1.46;
+    // 6. Geometría Esculpida Fiel a la Fotografía Real
+    // Forma de tartaleta/muffin artesanal con suave conicidad, estrías y cráter central
+    const R_top = 1.46;
+    const R_bot = 1.18;
     const H = 0.86;
-    const segRadial = 64;
-    const segHeight = 16;
+    const segRadial = 80;
+    const segHeight = 24;
 
-    // Conicidad suave tipo molde artesanal (base ligeramente menor que la corona superior)
-    const puckGeo = new THREE.CylinderGeometry(R, R * 0.92, H, segRadial, segHeight);
-
-    // Redondear artesanalmente aristas, relieve orgánico y depresión central
+    const puckGeo = new THREE.CylinderGeometry(R_top, R_bot, H, segRadial, segHeight);
     const pos = puckGeo.attributes.position;
     const norm = puckGeo.attributes.normal;
 
     for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const y = pos.getY(i);
-      const z = pos.getZ(i);
+      let x = pos.getX(i);
+      let y = pos.getY(i);
+      let z = pos.getZ(i);
 
       const r = Math.sqrt(x * x + z * z);
       const angle = Math.atan2(z, x);
+      const v = (y + H / 2) / H; // 0 = base, 1 = cima
 
-      // Redondeo del borde superior
-      if (y > H / 2 - 0.14 && r > R - 0.22) {
-        const factor = (y - (H / 2 - 0.14)) / 0.14;
-        const newX = x - Math.cos(angle) * (factor * 0.10);
-        const newZ = z - Math.sin(angle) * (factor * 0.10);
-        const newY = y - (factor * factor * 0.05);
-        pos.setXYZ(i, newX, newY, newZ);
+      // A) Ondulaciones suaves del molde artesanal (16 estrías suaves en el cuerpo inferior)
+      if (r > 0.35 && v < 0.90) {
+        const fluteWeight = Math.pow(1.0 - Math.min(1.0, v * 1.1), 0.8);
+        const fluting = Math.sin(angle * 16.0) * 0.016 * fluteWeight;
+        const profileBulge = Math.sin(v * Math.PI) * 0.024;
+        const deltaR = fluting + profileBulge;
+        x += Math.cos(angle) * deltaR;
+        z += Math.sin(angle) * deltaR;
       }
-      // Redondeo del borde inferior
-      if (y < -H / 2 + 0.14 && r > R - 0.22) {
+
+      // B) Borde superior redondeado con micro-irregularidades orgánicas
+      if (y > H / 2 - 0.15 && r > R_top - 0.24) {
+        const factor = (y - (H / 2 - 0.15)) / 0.15;
+        const rimNoise = (Math.sin(angle * 14.0) * 0.012 + Math.cos(angle * 28.0) * 0.008);
+        x -= Math.cos(angle) * (factor * 0.09 - rimNoise);
+        z -= Math.sin(angle) * (factor * 0.09 - rimNoise);
+        y -= (factor * factor * 0.045);
+      }
+
+      // C) Borde inferior redondeado
+      if (y < -H / 2 + 0.14 && r > R_bot - 0.22) {
         const factor = (-y - (H / 2 - 0.14)) / 0.14;
-        const newX = x - Math.cos(angle) * (factor * 0.10);
-        const newZ = z - Math.sin(angle) * (factor * 0.10);
-        const newY = y + (factor * factor * 0.05);
-        pos.setXYZ(i, newX, newY, newZ);
+        x -= Math.cos(angle) * (factor * 0.09);
+        z -= Math.sin(angle) * (factor * 0.09);
+        y += (factor * factor * 0.045);
       }
 
-      // Suave depresión artesanal hacia el centro donde se asienta la mecha
-      if (y > H / 2 - 0.08 && r < R - 0.25) {
-        const centerDip = Math.max(0, 1.0 - (r / (R - 0.25))) * 0.045;
-        pos.setY(i, pos.getY(i) - centerDip);
+      // D) Cara superior: suave depresión central y relieve de virutas prensadas
+      if (y > H / 2 - 0.10) {
+        const crater = Math.max(0, 1.0 - (r / 0.88));
+        const craterDepth = Math.pow(crater, 1.6) * 0.048;
+
+        const clump1 = Math.sin(x * 14.0 + z * 9.0) * Math.cos(z * 13.0 - x * 7.0) * 0.010;
+        const clump2 = Math.cos(x * 28.0 - z * 22.0) * 0.006;
+
+        y += clump1 + clump2 - craterDepth;
       }
 
-      // Micro-rugosidad artesanal de virutas prensadas
-      const n1 = Math.sin(angle * 14.0) * Math.cos(y * 12.0) * 0.007;
-      const n2 = Math.cos(angle * 22.0 + y * 9.0) * 0.004;
-      const disp = n1 + n2;
+      // E) Micro-rugosidad de virutas en los laterales
+      if (v < 0.92 && v > 0.08) {
+        const sideNoise = (Math.sin(angle * 22.0 + y * 14.0) * 0.004 + Math.cos(angle * 44.0 - y * 24.0) * 0.002);
+        x += norm.getX(i) * sideNoise;
+        z += norm.getZ(i) * sideNoise;
+      }
 
-      pos.setX(i, pos.getX(i) + norm.getX(i) * disp);
-      pos.setY(i, pos.getY(i) + norm.getY(i) * disp);
-      pos.setZ(i, pos.getZ(i) + norm.getZ(i) * disp);
+      pos.setXYZ(i, x, y, z);
     }
 
     puckGeo.computeVertexNormals();
 
-    // Materiales PBR - Aserrín de madera comprimido artesanal (superficie mate, orgánica y fibrosa)
+    // Materiales PBR
     const sideMaterial = new THREE.MeshStandardMaterial({
       map: albedoSide,
       normalMap: normalSide,
@@ -228,33 +245,145 @@
       metalness: 0.0
     });
 
-    const bottomMaterial = topMaterial.clone();
+    const bottomMaterial = sideMaterial.clone();
 
-    // Array de materiales: [0: Lateral, 1: Superior, 2: Inferior]
-    const puckMaterials = [sideMaterial, topMaterial, bottomMaterial];
-    const puckMesh = new THREE.Mesh(puckGeo, puckMaterials);
+    // [0: Lateral estriado, 1: Cara superior con virutas, 2: Base]
+    const puckMesh = new THREE.Mesh(puckGeo, [sideMaterial, topMaterial, bottomMaterial]);
     puckGroup.add(puckMesh);
 
-    // 7. Mecha de Algodón Trenzado con Curvatura Natural y Punta Tostada
-    const wickSegments = 28;
-    const wickRadialSegments = 14;
+    // 7. InstancedMesh de Virutas y Astillas 3D Reales (Profundidad Geométrica Física)
+    // Función matemática para fijar cada viruta exactamente sobre el relieve de la superficie
+    function getTopSurfaceY(r, x, z) {
+      let y = H / 2;
+      if (r > R_top - 0.24) {
+        const factor = (r - (R_top - 0.24)) / 0.24;
+        y -= factor * factor * 0.045;
+      }
+      const crater = Math.max(0, 1.0 - (r / 0.88));
+      const craterDepth = Math.pow(crater, 1.6) * 0.048;
+      const clump1 = Math.sin(x * 14.0 + z * 9.0) * Math.cos(z * 13.0 - x * 7.0) * 0.010;
+      const clump2 = Math.cos(x * 28.0 - z * 22.0) * 0.006;
+      return y - craterDepth + clump1 + clump2;
+    }
+
+    const chipCount = 180;
+    const chipGeo = new THREE.PlaneGeometry(0.026, 0.075, 2, 2);
+    chipGeo.rotateX(-Math.PI / 2); // Hacerlas horizontales paralelas a la superficie
+    const cPos = chipGeo.attributes.position;
+    for (let k = 0; k < cPos.count; k++) {
+      const cx = cPos.getX(k);
+      const cz = cPos.getZ(k);
+      // Curvatura sutil de astilla de madera
+      cPos.setY(k, (cx * cx * 2.0 + cz * cz * 1.5) * 0.015);
+    }
+    chipGeo.computeVertexNormals();
+
+    const chipMat = new THREE.MeshStandardMaterial({
+      map: albedoTop,
+      roughness: 0.90,
+      metalness: 0.0,
+      side: THREE.DoubleSide
+    });
+
+    const chipsMesh = new THREE.InstancedMesh(chipGeo, chipMat, chipCount);
+    const dummy = new THREE.Object3D();
+    const chipColors = [
+      new THREE.Color(0xd2b48c), // Rubio pino natural
+      new THREE.Color(0xc4996b), // Cedro tostado cálido
+      new THREE.Color(0xdfc8a5), // Fibra de madera clara
+      new THREE.Color(0xb38250), // Hendidura tostada
+      new THREE.Color(0xe6dac5)  // Viruta con velo de cera
+    ];
+
+    // Distribución orgánica sobre la superficie superior y borde
+    for (let j = 0; j < chipCount; j++) {
+      let rInst, angleInst;
+      if (j > 130) {
+        // En la corona perimetral (dentro del borde superior, perfectamente integrada)
+        angleInst = Math.random() * Math.PI * 2.0;
+        rInst = R_top - 0.22 + Math.random() * 0.16;
+      } else {
+        // En el cuerpo de la cara superior
+        angleInst = Math.random() * Math.PI * 2.0;
+        rInst = 0.22 + Math.sqrt(Math.random()) * (R_top - 0.44);
+      }
+
+      const xInst = Math.cos(angleInst) * rInst;
+      const zInst = Math.sin(angleInst) * rInst;
+      // Posición Y exacta en la superficie del aserrín
+      const yInst = getTopSurfaceY(rInst, xInst, zInst) + 0.002;
+
+      dummy.position.set(xInst, yInst, zInst);
+
+      // Inclinación sutil casi plana
+      const pitch = (Math.random() - 0.5) * 0.14;
+      const roll = (Math.random() - 0.5) * 0.14;
+      const yaw = Math.random() * Math.PI * 2.0;
+      dummy.rotation.set(pitch, yaw, roll);
+
+      // Escala variable
+      const scaleRand = 0.65 + Math.random() * 0.55;
+      dummy.scale.set(scaleRand, 1.0, scaleRand * (0.8 + Math.random() * 0.4));
+      dummy.updateMatrix();
+
+      chipsMesh.setMatrixAt(j, dummy.matrix);
+      const chosenColor = chipColors[Math.floor(Math.random() * chipColors.length)];
+      chipsMesh.setColorAt(j, chosenColor);
+    }
+    chipsMesh.instanceMatrix.needsUpdate = true;
+    if (chipsMesh.instanceColor) chipsMesh.instanceColor.needsUpdate = true;
+    puckGroup.add(chipsMesh);
+
+    // 8. Cera vegetal translúcida impregnada en el fondo del cráter
+    const waxPoolGeo = new THREE.CylinderGeometry(0.30, 0.36, 0.015, 24);
+    const wpPos = waxPoolGeo.attributes.position;
+    for (let i = 0; i < wpPos.count; i++) {
+      const ang = Math.atan2(wpPos.getZ(i), wpPos.getX(i));
+      const rMod = 1.0 + Math.sin(ang * 5.0) * 0.10 + Math.cos(ang * 7.0) * 0.06;
+      wpPos.setX(i, wpPos.getX(i) * rMod);
+      wpPos.setZ(i, wpPos.getZ(i) * rMod);
+    }
+    waxPoolGeo.computeVertexNormals();
+
+    const waxPoolMat = new THREE.MeshStandardMaterial({
+      color: 0xdec6a2, // Tono ámbar/miel vegetal suave de la cera fundida en aserrín
+      roughness: 0.35,
+      metalness: 0.0,
+      transparent: true,
+      opacity: 0.42
+    });
+    const waxPool = new THREE.Mesh(waxPoolGeo, waxPoolMat);
+    waxPool.position.set(0.01, H / 2 - 0.046, 0.02);
+    puckGroup.add(waxPool);
+
+    // 9. Mecha Artesanal de Algodón Grueso Impregnada en Cera
+    const wickSegments = 24;
+    const wickRadialSegments = 16;
     const wickPoints = [
-      new THREE.Vector3(0.02, H / 2 - 0.16, 0.03),
-      new THREE.Vector3(0.05, H / 2 + 0.15, 0.06),
-      new THREE.Vector3(0.12, H / 2 + 0.40, 0.10),
-      new THREE.Vector3(0.20, H / 2 + 0.65, 0.07)
+      new THREE.Vector3(0.01, H / 2 - 0.15, 0.02),
+      new THREE.Vector3(0.03, H / 2 + 0.12, 0.04),
+      new THREE.Vector3(0.06, H / 2 + 0.32, 0.06),
+      new THREE.Vector3(0.09, H / 2 + 0.50, 0.05),
+      new THREE.Vector3(0.10, H / 2 + 0.56, 0.04)
     ];
     const wickCurve = new THREE.CatmullRomCurve3(wickPoints);
-    const wickGeo = new THREE.TubeGeometry(wickCurve, wickSegments, 0.085, wickRadialSegments, false);
+    const wickGeo = new THREE.TubeGeometry(wickCurve, wickSegments, 0.082, wickRadialSegments, false);
 
-    // Cerrar y redondear la punta de la mecha para que no sea un tubo hueco
+    // Redondear suavemente el domo de la punta de la mecha
     const wickPos = wickGeo.attributes.position;
     const lastRingStart = wickSegments * (wickRadialSegments + 1);
-    const tipEnd = wickPoints[wickPoints.length - 1].clone().add(new THREE.Vector3(0.03, 0.05, -0.01));
+    const tipEnd = wickPoints[wickPoints.length - 1].clone().add(new THREE.Vector3(0.01, 0.03, -0.005));
     for (let j = 0; j <= wickRadialSegments; j++) {
       const idx = lastRingStart + j;
       if (idx < wickPos.count) {
-        wickPos.setXYZ(idx, tipEnd.x, tipEnd.y, tipEnd.z);
+        const origX = wickPos.getX(idx);
+        const origZ = wickPos.getZ(idx);
+        wickPos.setXYZ(
+          idx,
+          origX * 0.35 + tipEnd.x * 0.65,
+          tipEnd.y + 0.01,
+          origZ * 0.35 + tipEnd.z * 0.65
+        );
       }
     }
     wickGeo.computeVertexNormals();
@@ -262,30 +391,30 @@
     const wickMaterial = new THREE.MeshStandardMaterial({
       map: wickAlbedo,
       normalMap: wickNormal,
-      normalScale: new THREE.Vector2(1.0, 1.0),
+      normalScale: new THREE.Vector2(0.8, 0.8),
       roughnessMap: wickRoughness,
-      roughness: 0.92,
+      roughness: 0.62,
       metalness: 0.0
     });
 
     const wickMesh = new THREE.Mesh(wickGeo, wickMaterial);
     puckGroup.add(wickMesh);
 
-    // 8. Sombra de Contacto Suave en el Suelo
+    // 10. Sombra de Contacto Suave en el Suelo
     const shadowCanvas = document.createElement('canvas');
     shadowCanvas.width = 256;
     shadowCanvas.height = 256;
     const sCtx = shadowCanvas.getContext('2d');
     const sGrad = sCtx.createRadialGradient(128, 128, 10, 128, 128, 120);
-    sGrad.addColorStop(0, 'rgba(25, 20, 18, 0.46)');
-    sGrad.addColorStop(0.35, 'rgba(32, 24, 20, 0.22)');
-    sGrad.addColorStop(0.68, 'rgba(40, 30, 25, 0.05)');
+    sGrad.addColorStop(0, 'rgba(28, 22, 18, 0.44)');
+    sGrad.addColorStop(0.35, 'rgba(35, 26, 21, 0.20)');
+    sGrad.addColorStop(0.68, 'rgba(42, 32, 26, 0.04)');
     sGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
     sCtx.fillStyle = sGrad;
     sCtx.fillRect(0, 0, 256, 256);
 
     const shadowTex = new THREE.CanvasTexture(shadowCanvas);
-    const shadowGeo = new THREE.PlaneGeometry(3.4, 3.4);
+    const shadowGeo = new THREE.PlaneGeometry(3.6, 3.6);
     const shadowMat = new THREE.MeshBasicMaterial({
       map: shadowTex,
       transparent: true,
@@ -296,9 +425,10 @@
     shadowMesh.position.y = -H / 2 - 0.16;
     scene.add(shadowMesh);
 
-    // 9. Control de Rotación 360° Suave y Órbita
-    let targetRotX = 0.30;  // Inclinación inicial natural
-    let targetRotY = -0.42; // Ángulo inicial dinámico
+    // 11. Control de Rotación 360° Suave y Perspectiva
+    // Inclinación inicial idéntica a la fotografía real (38° pitch, ángulo dinámico natural)
+    let targetRotX = 0.38;
+    let targetRotY = -0.35;
     let currentRotX = targetRotX;
     let currentRotY = targetRotY;
 
@@ -366,7 +496,7 @@
 
     canvas.style.cursor = 'grab';
 
-    // 10. Redimensionamiento Responsivo
+    // 12. Redimensionamiento Responsivo
     function onResize() {
       const newRect = container.getBoundingClientRect();
       width = newRect.width || 540;
@@ -378,7 +508,7 @@
     }
     window.addEventListener('resize', onResize);
 
-    // 11. Optimización: Pausar Render cuando no esté visible en pantalla
+    // 13. Optimización: Pausar Render cuando no esté visible en pantalla
     let isVisible = true;
     let animationFrameId = null;
 
@@ -394,7 +524,7 @@
       observer.observe(container);
     }
 
-    // 12. Bucle de Animación a 60 FPS
+    // 14. Bucle de Animación a 60 FPS
     let clock = new THREE.Clock();
 
     function animate() {
@@ -421,7 +551,7 @@
         }
 
         if (idleTime > 0.8) {
-          targetRotY += delta * 0.30;
+          targetRotY += delta * 0.28;
         }
 
         // Levitación vertical suave tipo respiración orgánica
