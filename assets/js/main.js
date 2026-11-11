@@ -136,6 +136,50 @@ document.addEventListener('DOMContentLoaded', () => {
   let packCount = 2;
   const PUCKS_PER_PACK = 5;
   const DURATION_PER_PUCK = 20;
+  const PREF_CALC_KEY = 'biofuego_calc_packs';
+
+  // Si el visitante autorizó las cookies de preferencias, restaurar su última selección
+  const hasPreferencesConsent = () => {
+    try {
+      if (window.BiofuegoCookies && typeof window.BiofuegoCookies.hasConsent === 'function') {
+        return window.BiofuegoCookies.hasConsent('preferences');
+      }
+      const raw = window.localStorage.getItem('biofuego_cookie_consent');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return Boolean(parsed && parsed.preferences === true);
+      }
+    } catch (e) {
+      // Ignorar
+    }
+    return false;
+  };
+
+  const loadSavedPackCount = () => {
+    if (!hasPreferencesConsent()) return;
+    try {
+      const saved = parseInt(window.localStorage.getItem(PREF_CALC_KEY), 10);
+      if (!isNaN(saved) && saved >= 1 && saved <= 50) {
+        packCount = saved;
+      }
+    } catch (e) {
+      // Ignorar
+    }
+  };
+
+  const savePackCountPreference = () => {
+    try {
+      if (hasPreferencesConsent()) {
+        window.localStorage.setItem(PREF_CALC_KEY, String(packCount));
+      } else {
+        window.localStorage.removeItem(PREF_CALC_KEY);
+      }
+    } catch (e) {
+      // Ignorar
+    }
+  };
+
+  loadSavedPackCount();
 
   const updateCalculator = () => {
     if (calcQty) calcQty.textContent = packCount;
@@ -166,6 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnMinus.addEventListener('click', () => {
       if (packCount > 1) {
         packCount--;
+        savePackCountPreference();
         updateCalculator();
       }
     });
@@ -173,8 +218,13 @@ document.addEventListener('DOMContentLoaded', () => {
     btnPlus.addEventListener('click', () => {
       if (packCount < 50) {
         packCount++;
+        savePackCountPreference();
         updateCalculator();
       }
+    });
+
+    window.addEventListener('biofuego:cookie-consent-updated', () => {
+      savePackCountPreference();
     });
 
     updateCalculator();
