@@ -54,8 +54,10 @@
     container.appendChild(hintBadge);
 
     const rect = container.getBoundingClientRect();
-    let width = rect.width || 540;
-    let height = rect.height || 440;
+    const maxAvailWidth = Math.min(window.innerWidth - 32, 540);
+    let width = Math.min(rect.width || 340, maxAvailWidth);
+    if (width <= 0) width = 340;
+    let height = Math.round(width * (440 / 540));
 
     // 1. Escena y Cámara con el encuadre exacto de la fotografía real
     const scene = new THREE.Scene();
@@ -81,7 +83,7 @@
       return;
     }
 
-    renderer.setSize(width, height);
+    renderer.setSize(width, height, false);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     if (renderer.outputEncoding !== undefined) {
       renderer.outputEncoding = THREE.sRGBEncoding;
@@ -580,12 +582,14 @@
     // 10. Redimensionamiento Responsivo
     function onResize() {
       const newRect = container.getBoundingClientRect();
-      width = newRect.width || 540;
-      height = newRect.height || 440;
+      const maxAvail = Math.min(window.innerWidth - 32, 540);
+      width = Math.min(newRect.width || 340, maxAvail);
+      if (width <= 0) width = 340;
+      height = Math.round(width * (440 / 540));
 
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(width, height);
+      renderer.setSize(width, height, false);
     }
     window.addEventListener('resize', onResize);
 
